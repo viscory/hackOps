@@ -69,7 +69,7 @@ def babylon(numberOfBooks, numberOfDays, books, days):
                     bin_value += data['values'][i]
             total_weight += bin_weight
             total_value += bin_value
-        return total_value
+        return int(total_value)
     else:
         return None
 
