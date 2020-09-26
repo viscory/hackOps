@@ -7,12 +7,14 @@ from math import inf
 logger = logging.getLogger(__name__)
 
 @app.route('/optimizedportfolio', methods=['POST'])
-def evaluate():
+def optimizer():
     data = request.get_json()
     logging.info("data sent for evaluation {}".format(data))
-
+    print(data)
     inputs = data.get("inputs")
-    return json.dumps(portfolioOpt(inputs))
+    temp = dict()
+    temp['outputs'] = portfolioOpt(inputs)
+    return jsonify(temp)
 
 def portfolioOpt(inputs):
     result = []
@@ -33,7 +35,7 @@ def portfolioOpt(inputs):
                 if numFC_cal < numFC:
                     numFC = numFC_cal
                     fut_name = future["Name"]
-        output = {"HedgePositionName": fut_name,
-                "OptimalHedgeRatio": ohr, "NumFuturesContract": numFC}
+        output = {"HedgePositionName": fut_name, "OptimalHedgeRatio": ohr,
+                "NumFuturesContract": numFC }
         result.append(output)
     return result
