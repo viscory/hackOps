@@ -55,11 +55,6 @@ def recursor(infected, genes, answer, path, visited):
     # print(visited)
     return
 
-  if(infected["name"] == "metal"):
-    path = path+infected["name"]
-    answer.append(path)
-    return
-
   for i in genes:
 
     if(i["name"] not in visited):
@@ -72,6 +67,13 @@ def recursor(infected, genes, answer, path, visited):
         minimumDiff = currentDiff[0]
   
   for i in finalChecker:
+
+    if len(path) > 0 and  i[1][0] == 0:
+
+      path = path+infected["name"]
+      answer.append(path)
+      return 
+      
     if i[1][0] == minimumDiff:
       possibilities.append(i)
     
