@@ -59,6 +59,7 @@ def babylon(numberOfBooks, numberOfDays, books, days):
 
     if status == pywraplp.Solver.OPTIMAL:
         total_weight = 0
+        total_value = 0
         for j in data['bins']:
             bin_weight = 0
             bin_value = 0
@@ -67,7 +68,8 @@ def babylon(numberOfBooks, numberOfDays, books, days):
                     bin_weight += data['weights'][i]
                     bin_value += data['values'][i]
             total_weight += bin_weight
-        return total_weight
+            total_value += bin_value
+        return total_value
     else:
         return None
 
