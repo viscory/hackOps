@@ -10,11 +10,11 @@ logger = logging.getLogger(__name__)
 def optimizer():
     data = request.get_json()
     logging.info("data sent for evaluation {}".format(data))
-    print(data)
+
     inputs = data.get("inputs")
-    temp = dict()
-    temp['outputs'] = portfolioOpt(inputs)
-    return jsonify(temp)
+    result = portfolioOpt(inputs)
+    result = {"outputs": result}
+    return json.dumps(result)
 
 def portfolioOpt(inputs):
     result = []
@@ -25,17 +25,19 @@ def portfolioOpt(inputs):
         for future in futures:
             fpVol_cal = future['FuturePrcVol']
             ohr_cal = round((future["CoRelationCoefficient"]
-                       * sVol) / future['FuturePrcVol'], 3)
+                       * sVol) / fpVol_cal, 3)
             numFC_cal = int((ohr_cal) * (pValue /
                          (future['IndexFuturePrice'] * future['Notional'])) + 0.5)
-            if ohr_cal < ohr and fpVol_cal < fpVol:
-                fut_name=future["Name"]
-                ohr, fpVol, numFC=ohr_cal, fpVol_cal, numFC_cal
-            elif (ohr_cal == ohr and fpVol_cal == fpVol) or (ohr_cal < ohr and fpVol > fpVol_cal) or (ohr_cal > ohr and fpVol < fpVol_cal):
+            print("Current:", fpVol_cal, ohr_cal, numFC_cal)
+            print("Optimized:", fpVol, ohr, numFC)
+            if (ohr_cal == ohr and fpVol_cal == fpVol) or (ohr < ohr_cal and fpVol > fpVol_cal) or (ohr > ohr_cal and fpVol < fpVol_cal):
                 if numFC_cal < numFC:
-                    numFC = numFC_cal
+                    ohr, fpVol, numFC = ohr_cal, fpVol_cal, numFC_cal
                     fut_name = future["Name"]
-        output = {"HedgePositionName": fut_name, "OptimalHedgeRatio": ohr,
-                "NumFuturesContract": numFC }
+            elif ohr_cal <= ohr and fpVol_cal <= fpVol:
+                fut_name = future["Name"]
+                ohr, fpVol, numFC = ohr_cal, fpVol_cal, numFC_cal
+        output = {"HedgePositionName": fut_name,
+                          "OptimalHedgeRatio": ohr, "NumFuturesContract": numFC}
         result.append(output)
     return result
