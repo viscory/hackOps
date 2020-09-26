@@ -9,12 +9,13 @@ logger = logging.getLogger(__name__)
 
 @app.route('/contact_trace', methods=['POST'])
 def eval():
-    data = request.get_json()
+    data = request.get_json();
     print(data)
     # logging.info("data sent for evaluation {}".format(data))
     # print(result)
     # logging.info("My result :{}".format(result))
     return jsonify(contact(data))
+
 
 import math
 
@@ -54,10 +55,10 @@ def recursor(infected, genes, answer, path, visited):
     # print(visited)
     return
 
-  # if(infected["name"] == "metal"):
-  #   path = path+infected["name"]
-  #   answer.append(path)
-  #   return
+  if(infected["name"] == "metal"):
+    path = path+infected["name"]
+    answer.append(path)
+    return
 
   for i in genes:
 
@@ -109,6 +110,7 @@ def contact(request):
   return answer
 
   
+
 
 
 
