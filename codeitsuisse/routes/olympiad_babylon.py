@@ -12,8 +12,8 @@ from ortools.linear_solver import pywraplp
 def create_data_model(numberOfBooks, numberOfDays, books, days):
     """Create the data for the example."""
     data = {}
-    weights = [1] * numberOfBooks
-    values = books
+    weights = books
+    values = [1] * numberOfBooks
     data['weights'] = weights
     data['values'] = values
     data['items'] = list(range(len(weights)))
