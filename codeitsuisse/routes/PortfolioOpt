@@ -14,7 +14,7 @@ def evaluate():
     inputs = data.get("inputs")
     result = portfolioOpt(inputs)
     result = {"outputs": result}
-    return json.dumps(portfolioOpt(inputs))
+    return json.dumps(result)
 
 def portfolioOpt(inputs):
     result = []
