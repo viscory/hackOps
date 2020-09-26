@@ -1,8 +1,7 @@
-<<<<<<< HEAD
-=======
+
 from collections import Counter 
 
->>>>>>> a3b3f8b7ae0c88bd3404b4222e4f8c200026bf0d
+
 import logging
 import json
 
@@ -13,20 +12,6 @@ from codeitsuisse import app;
 logger = logging.getLogger(__name__)
 
 @app.route('/intelligent-farming', methods=['POST'])
-<<<<<<< HEAD
-def farmer():
-    data = request.get_json()
-    response = data
-    genDict = {'A':0, 'C':0, 'T':0, 'G':0}
-    for index, gene in enumerate(data.get('list')):
-        sequence = gene.get('geneSequence')
-        for char in sequence:
-            genDict[char] += 1
-        response['list'][index]['geneCount'] = genDict
-    print(response)
-    return response
-               
-=======
 def evaluateGMO():
     data = request.get_json()
     logging.info("data sent for evaluation {}".format(data))
@@ -103,4 +88,4 @@ def gmo(seq):
         count += 1
 
     return "".join(sequence)
->>>>>>> a3b3f8b7ae0c88bd3404b4222e4f8c200026bf0d
+
