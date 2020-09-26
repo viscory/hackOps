@@ -16,24 +16,6 @@ def eval():
     # logging.info("My result :{}".format(result))
     return jsonify(contact(data))
 
-input = {
-    "infected": {
-        "name":"plastic",
-        "genome":"acg-gcu-uca-gca-acu-ccc-gua-acg-gcu-uca-gca-acu-cac-gaa"
-    },
-    "origin": {
-        "name":"metal",
-        "genome":"acg-acu-uca-gca-acu-ccc-gua-acg-ccu-uca-gca-acu-cac-gac"
-    },
-    "cluster":[
-        {
-            "name":"thread",
-            "genome":"acg-acu-uca-gca-acu-ccc-gua-acg-ccu-uca-gca-acu-cac-gaa"
-        }
-    ]
-}
-
-
 import math
 
 def difference(a, b):
@@ -72,10 +54,10 @@ def recursor(infected, genes, answer, path, visited):
     # print(visited)
     return
 
-  if(infected["name"] == "metal"):
-    path = path+infected["name"]
-    answer.append(path)
-    return
+  # if(infected["name"] == "metal"):
+  #   path = path+infected["name"]
+  #   answer.append(path)
+  #   return
 
   for i in genes:
 
@@ -127,7 +109,6 @@ def contact(request):
   return answer
 
   
-contact(input)
 
 
 
