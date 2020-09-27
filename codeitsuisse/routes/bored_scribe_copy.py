@@ -3,7 +3,7 @@ import json
 from wordsegment import load, segment
 
 from flask import request, jsonify;
-from langdetect import detect
+
 from codeitsuisse import app;
 import wordninja
 
@@ -160,16 +160,20 @@ class CaesarCipher(object):
         entropy_values = {}
         attempt_cache = {}
         message = self.message
-        for i in range(26,0,-1):
+        for i in range(25):
             self.message = message
             self.offset = i * -1
             test_cipher = self.cipher()
+            entropy_values[i] = self.calculate_entropy(test_cipher)
+            attempt_cache[i] = test_cipher
 
-            x = ' '.join(wordninja.split(test_cipher))
-            if(x.count(' ')*4 < len(x) ):
-                return test_cipher
+        sorted_by_entropy = sorted(entropy_values, key=entropy_values.get)
+        self.offset = sorted_by_entropy[0] * -1
+        cracked_text = attempt_cache[sorted_by_entropy[0]]
+        self.message = cracked_text
 
-        return message
+
+        return cracked_text
 
     @property
     def encoded(self):
@@ -214,6 +218,7 @@ def solve(data):
         ans['encryptionCount'] = 0
         tar=ord(s[0])
         cnt=ord(ori[0])
+        #dont know why
         if l==0:
             for t in range(100):
                 if cnt==tar:
@@ -224,11 +229,9 @@ def solve(data):
                     cnt=(cnt-123)%26+97
         else:
             for t in range(100):
-                print(cnt,t)
                 if cnt==tar:
                     ans['encryptionCount'] = t
                     break
-                print(has,nn)
                 tmp=sum(has)+nn
                 for i in range(len(has)):
                     has[i]+=tmp
@@ -237,7 +240,31 @@ def solve(data):
                 cnt+=tmp
                 if cnt>122:
                     cnt=(cnt-123)%26+97
-        s=' '.join(wordninja.split(ori))
+        #s=' '.join(wordninja.split(ori))
+        s = ' '.join(segment(ori))
+        tmp = s.split(' ')
+        s=tmp[0]
+        for i in range(1,len(tmp)):
+            if tmp[i]=='s' or tmp[i]=='i' and tmp[i-1]=='a':
+                s+=tmp[i]
+            else:
+                s+=' '+tmp[i]
+
+        '''
+        p=0
+        if 'palindrome' in tmp:
+            if 'is' in tmp:
+                iss=tmp.index('is')
+                if tmp.index('palindrome')>iss:
+                    for i in range(iss):
+                        ttmp=''.join(tmp[i:iss])
+                        if ttmp==ttmp[::-1]:
+                            s=''
+                            if i!=0:
+                                s=' '.join(tmp[:i])+' '
+                            s+=ttmp+' '+' '.join(tmp[iss:])
+                            break
+        '''
         ans['originalText'] = s
         res.append(ans)
     return res
@@ -248,3 +275,7 @@ def bored_scribe():
     result=solve(data)
     logging.info("My result :{}".format(result))
     return jsonify(result);
+'''
+data=[ { "id": 1, "encryptedText": "bbdef" } ]
+print(solve(data))
+'''
